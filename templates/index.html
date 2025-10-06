@@ -1,73 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>Smart Assistant</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">  
+    <title>Smart Assistant</title>  
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>  
+    <style>  
+        * {  
+            margin: 0;  
+            padding: 0;  
+            box-sizing: border-box;  
+        }  
+                body {
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
             background: #F4F4F4;
             min-height: 100vh;
             display: flex;
             overflow-x: hidden;
-            padding-bottom: 20px;
-            /* Added bottom padding to window */
+            padding-bottom: 20px; /* Added bottom padding to window */
+        }  
+        .sidebar {  
+            width: 280px;  
+            background: #FFFFFF;  
+            color: #374151;  
+            border-right: 1px solid #e5e7eb;  
+            display: flex;  
+            flex-direction: column;  
+            transition: width 0.3s ease;  
+            height: 100vh;  
+            position: fixed;  
+            left: 0;  
+            top: 0;  
+            z-index: 1000;  
+        }  
+        .sidebar.minimized {  
+            width: 50px;  
+            overflow: hidden;  
         }
-
-        .sidebar {
-            width: 280px;
-            background: #FFFFFF;
-            color: #374151;
-            border-right: 1px solid #e5e7eb;
-            display: flex;
-            flex-direction: column;
-            transition: width 0.3s ease;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .sidebar.minimized {
-            width: 50px;
-            overflow: hidden;
-        }
-
-        .sidebar.minimized .sidebar-content {
-            display: none;
-        }
-
-        .sidebar-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .sidebar-header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .toggle-btn {
-            background: none;
-            border: none;
-            color: #374151;
-            cursor: pointer;
+        .sidebar.minimized .sidebar-content {  
+            display: none;  
+        }  
+        .sidebar-header {  
+            padding: 16px 24px;  
+            border-bottom: 1px solid #e5e7eb;  
+            display: flex;  
+            justify-content: space-between;  
+            align-items: center;  
+            flex-shrink: 0;  
+        }  
+        .sidebar-header h2 {  
+            font-size: 18px;  
+            font-weight: 600;  
+            color: #1f2937;  
+        }  
+        .toggle-btn {  
+            background: none;  
+            border: none;  
+            color: #374151;  
+            cursor: pointer;  
             display: flex;
             align-items: center;
             justify-content: center;
@@ -77,128 +67,128 @@
             transition: all 0.2s ease;
             position: relative;
         }
-
+       
         .toggle-btn:hover {
             background-color: #f3f4f6;
         }
-
+       
         .toggle-btn:active {
             transform: scale(0.95);
         }
-
+       
         .toggle-btn svg {
             width: 18px;
             height: 18px;
             transition: transform 0.3s ease;
         }
-
+       
         .sidebar.minimized .toggle-btn svg {
             transform: rotate(180deg);
         }
-
+       
         /* Responsive adjustments for toggle button */
         @media (max-width: 768px) {
             .toggle-btn {
                 width: 36px;
                 height: 36px;
             }
-
+           
             .toggle-btn svg {
                 width: 20px;
                 height: 20px;
             }
         }
-
+       
         @media (max-width: 481px) {
             .toggle-btn {
                 width: 40px;
                 height: 40px;
             }
-
+           
             .toggle-btn svg {
                 width: 22px;
                 height: 22px;
             }
         }
-
+       
         /* Small height viewport adjustments */
         @media (max-height: 600px) {
             .toggle-btn {
                 width: 28px;
                 height: 28px;
             }
-
+           
             .toggle-btn svg {
                 width: 16px;
                 height: 16px;
             }
         }
-
+       
         /* Ultra-compact mode */
         @media (max-width: 320px) and (max-height: 400px) {
             .toggle-btn {
                 width: 24px;
                 height: 24px;
             }
-
+           
             .toggle-btn svg {
                 width: 14px;
                 height: 14px;
             }
         }
-
+       
         /* Enhanced toggle button states */
         .toggle-btn:focus {
             outline: 2px solid #3b82f6;
             outline-offset: 2px;
         }
-
+       
         .toggle-btn:focus:not(:focus-visible) {
             outline: none;
         }
-
+       
         /* Dark theme support for toggle button */
         body.dark-theme .toggle-btn {
             color: #d1d5db;
         }
-
+       
         body.dark-theme .toggle-btn:hover {
             background-color: #374151;
         }
-
+       
         /* Embedded mode toggle button adjustments */
         body.embedded-mode .toggle-btn {
             width: 28px;
             height: 28px;
         }
-
+       
         body.embedded-mode .toggle-btn svg {
             width: 16px;
             height: 16px;
         }
-
+       
         /* Mobile viewport toggle button adjustments */
         body.mobile-viewport .toggle-btn {
             width: 40px;
             height: 40px;
         }
-
+       
         body.mobile-viewport .toggle-btn svg {
             width: 22px;
             height: 22px;
         }
-
+       
         /* Small height viewport toggle button adjustments */
         body.small-height-viewport .toggle-btn {
             width: 28px;
             height: 28px;
         }
-
+       
         body.small-height-viewport .toggle-btn svg {
             width: 16px;
             height: 16px;
         }
-
+       
         /* Sidebar overlay styles */
         .sidebar-overlay {
             position: fixed;
@@ -212,46 +202,51 @@
             transition: opacity 0.3s ease;
             backdrop-filter: blur(2px);
         }
-
+       
         /* Dark theme overlay */
         body.dark-theme .sidebar-overlay {
             background: rgba(0, 0, 0, 0.7);
         }
-
+       
         /* Responsive overlay adjustments */
         @media (max-width: 481px) {
             .sidebar-overlay {
                 backdrop-filter: blur(1px);
             }
         }
-
+       
         @media (max-height: 600px) {
             .sidebar-overlay {
                 backdrop-filter: none;
             }
+        }  
+        .sidebar-content {  
+            padding: 16px 24px;  
+            flex-grow: 1;  
+            display: flex;  
+            flex-direction: column;  
+            gap: 8px;  
+            min-height: 0;  
+            overflow: hidden;  
+            height: 100%;  
         }
 
-        .sidebar-content {
-            padding: 16px 24px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            min-height: 0;
-            overflow: hidden;
-            height: 100%;
+        body.dark-theme .sidebar {
+            background: #1f2937;   /* dark gray */
+            color: #d1d5db;        /* light text */
+            border-right: 1px solid #374151;
         }
-
-
-        .session-list {
-            list-style: none;
-            margin: 0;
-            flex-grow: 1;
-            overflow-y: auto;
-            min-height: 0;
-            height: 100%;
-            scrollbar-width: thin;
-            scrollbar-color: #c1c1c1 #f1f1f1;
+        
+ 
+        .session-list {  
+            list-style: none;  
+            margin: 0;  
+            flex-grow: 1;  
+            overflow-y: auto;  
+            min-height: 0;  
+            height: 100%;  
+            scrollbar-width: thin;  
+            scrollbar-color: #c1c1c1 #f1f1f1;  
         }
 
         .session-list::-webkit-scrollbar {
@@ -270,55 +265,116 @@
 
         .session-list::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
+        }  
+        .session-list li {  
+            padding: 8px 12px;  
+            font-size: 14px;  
+            color: #374151;  
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 4px;  
+            flex-shrink: 0;  
+        }  
+        .session-list li:hover {  
+            background-color: #f3f4f6;  
+        }  
+        .session-list li.active {  
+            background-color: #e5e7eb;  
+            font-weight: 600;  
         }
 
-        .session-list li {
+        .session-item {
             padding: 8px 12px;
-            font-size: 14px;
-            color: #374151;
             cursor: pointer;
             border-radius: 6px;
             margin-bottom: 4px;
-            flex-shrink: 0;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
         }
 
-        .session-list li:hover {
+        .session-item:hover {
             background-color: #f3f4f6;
+            border-color: #d1d5db;
         }
 
-        .session-list li.active {
+        .session-item.active {
             background-color: #e5e7eb;
+            border-color: #9ca3af;
             font-weight: 600;
         }
 
-        .main-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            margin-left: 280px;
-            transition: margin-left 0.3s ease;
-            min-height: 100vh;
+        /* Dark theme */
+        body.dark-theme .session-item {
+            background: #1f2937;   /* dark gray */
+            color: #f9fafb;        /* light text */
         }
 
-        .main-wrapper.minimized-sidebar {
-            margin-left: 50px;
+        body.dark-theme .session-item:hover {
+            background: #374151;   /* slightly lighter gray */
+        }
+        .session-title {
+            font-size: 14px;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 2px;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .session-time {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        /* Dark theme styles for session items */
+        body.dark-theme .session-item:hover {
+            background-color: #080909;
+            border-color: #4b5563;
+        }
+
+        body.dark-theme .session-item.active {
+            background-color: #1b1d1f;
+            border-color: #6b7280;
+        }
+
+        body.dark-theme .session-title {
+            color: #d1d5db;
+        }
+
+        body.dark-theme .session-time {
+            color: #9ca3af;
+            background-color: #1b1b1f;
+        }  
+        .main-wrapper {
+            flex: 1;
+            display: flex;  
+            flex-direction: column;  
+            position: relative;  
+            margin-left: 280px;  
+            transition: margin-left 0.3s ease;  
+            min-height: 100vh;  
+        }  
+        .main-wrapper.minimized-sidebar {  
+            margin-left: 50px;  
         }
 
         .main-wrapper.minimized-sidebar .header {
             left: 50px;
-        }
+        }  
 
-        .header {
-            padding: 24px 24px;
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            flex-shrink: 0;
-            min-height: 80px;
+        .header {  
+            padding: 24px 24px;  
+            background: rgba(255, 255, 255, 0.95);  
+            border-bottom: 1px solid #e5e7eb;  
+            display: flex;  
+            align-items: center;  
+            justify-content: space-between;  
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);  
+            flex-shrink: 0;  
+            min-height: 80px;  
             position: fixed;
             top: 0;
             left: 280px;
@@ -328,249 +384,192 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
-
+       
         .header:hover {
             background: rgba(255, 255, 255, 0.98);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
+        }  
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+        .header-left {  
+            display: flex;  
+            align-items: center;  
+            gap: 20px;  
+        }  
 
-        .header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
+        .header h1 {  
+            font-size: 28px;  
+            font-weight: 600;  
+            color: #1f2937;  
+            margin-bottom: 4px;  
+        }  
 
-        .header p {
-            color: #6b7280;
-            font-size: 16px;
-            opacity: 0.9;
-        }
+        .header p {  
+            color: #6b7280;  
+            font-size: 16px;  
+            opacity: 0.9;  
+        }  
 
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            justify-content: flex-end;
-            flex: 1;
-        }
+        .header-controls {  
+            display: flex;  
+            align-items: center;  
+            gap: 16px;  
+            justify-content: flex-end;  
+            flex: 1;  
+        }  
 
-        .session-btn {
-            background-color: #444;
-            color: #FFFFFF;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-        }
+        .session-btn {  
+            background-color: #444;  
+            color: #FFFFFF;  
+            border: none;  
+            padding: 6px 12px;  
+            border-radius: 6px;  
+            cursor: pointer;  
+            font-size: 12px;  
+            font-weight: 500;  
+        }  
 
-        .session-btn:hover {
-            background-color: #555;
-        }
+        .session-btn:hover {  
+            background-color: #555;  
+        }  
 
-        .session-btn.new-chat {
-            background-color: #1677ff;
-            padding: 6px 16px;
-            font-weight: 600;
-        }
+        .session-btn.new-chat {  
+            background-color: #1677ff;  
+            padding: 6px 16px;  
+            font-weight: 600;  
+        }  
 
-        .session-btn.new-chat:hover {
-            background-color: #0958d9;
-        }
+        .session-btn.new-chat:hover {  
+            background-color: #0958d9;  
+        }  
 
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
+        .chat-container {  
+            flex: 1;  
+            display: flex;  
+            flex-direction: column;  
+            padding: 20px 24px;  
+            max-width: 1400px; /* Increased from 1200px */
+            margin: 0 auto;  
+            width: 100%;  
             padding-bottom: 20px;
-            /* Reduced bottom padding */
-            margin-top: 110px;
-            /* Moved chat container further down */
+            margin-top: 20px; /* Reduced from 110px to return to earlier position */
             /* Ensure chat container is always visible, even in report mode */
             visibility: visible !important;
             opacity: 1 !important;
-            min-height: calc(100vh - 130px);
-            /* Adjust min-height for bottom positioning */
-            justify-content: flex-end;
-            /* Push chat-content to bottom */
-        }
+            min-height: calc(100vh - 80px); /* Increased height */
+            height: calc(100vh - 80px); /* Force full height */
+            justify-content: flex-start; /* Return to top alignment */
+        }  
 
-        .chat-container.report-mode {
+        .chat-container.report-mode {  
             /* Ensure chat container remains visible in report mode */
             display: flex !important;
             visibility: visible !important;
             opacity: 1 !important;
-        }
+        }  
 
-        .chat-content {
-            background: #f8f9fa;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-            display: flex;
-            flex-direction: column;
+        .chat-content {  
+            background: #f8f9fa;  
+            border-radius: 12px;  
+            border: 1px solid #e5e7eb;  
+            display: flex;  
+            flex-direction: column;  
             max-height: calc(100vh - 160px);
-            /* Use max-height instead of min-height */
-            height: auto;
-            /* Allow content to determine height */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 0px 0px;
+            height: calc(100vh - 160px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  
+            padding: 0 24px;  
             /* Ensure chat content is always visible */
             visibility: visible !important;
             opacity: 1 !important;
-            margin-top: auto;
-            /* Push to bottom of container */
-        }
+            margin-top: auto; /* Push to bottom of container */
+        }  
 
-        .chat-content.report-mode {
+        .chat-content.report-mode {  
             /* Ensure chat content remains visible in report mode */
             display: flex !important;
             visibility: visible !important;
             opacity: 1 !important;
-        }
+        }  
 
-        /* === Message Container Styles === */
-        #messages {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            line-height: 0.5;
+        .messages {  
+            flex: 1;  
+            padding: 20px 0;  
+            display: flex;  
+            flex-direction: column;  
+            gap: 16px;  
+            min-height: 400px;  
+            overflow-y: auto;  
+        }  
 
-            height: 60vh;
-            /* adjust height based on viewport */
-            overflow-y: auto;
-            /* scroll if content overflows */
-            background: #ffffff;
-            border-radius: 12px;
+        .message {  
+            max-width: 80%;  
+            padding: 12px 16px;  
+            border-radius: 12px;  
+            font-size: 14px;  
+            line-height: 1.5;  
+        }  
 
+        .message.user {  
+            background: #ffffff;  
+            color: #333333;  
+            align-self: flex-end;  
+            margin-left: auto;  
+            font-weight: 500;  
+            border: 1px solid #e5e7eb;  
+        }  
+
+        .message.assistant {  
+            background: #ffffff;  
+            color: #333333;  
+            align-self: flex-start;  
+            border: 1px solid #e5e7eb;  
+            /* white-space: pre-wrap;   */
+        }  
+
+        .message.assistant strong {  
+            font-weight: 600;  
+            color: #1f2937;  
+        }  
+
+        /* Message Container and Icon Styles */
+        .message-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-
-            font-family: "Segoe UI", Arial, sans-serif;
-            font-size: 1rem;
-            color: #333;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
-        /* Scrollbar styling (optional) */
-        #messages::-webkit-scrollbar {
-            width: 8px;
+        .message-icon {
+            display: flex;
+            align-items: center;
+            margin-top: 4px;
+            opacity: 0.6;
+            flex-shrink: 0;
         }
 
-        #messages::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
+        .message-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #6b7280;
         }
 
-        #messages::-webkit-scrollbar-track {
-            background: transparent;
+        .message-container .message {
+            width: 100%;
         }
-
-
-        /* Message bubbles */
-        .message {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            line-height: 1.5;
-            word-wrap: break-word;
-            display: inline-block;
-            margin: 6px 0;
-        }
-
-        /* Assistant message: left side */
-        .message.assistant {
-            background: #ffffff;
-            border: 0.1px solid gray;
-            color: #333;
-            align-self: flex-start;
-            margin-left: 0;
-            margin-right: auto;
-            text-align: left;
-        }
-
-        /* User message: right side */
-        .message.user {
-            background: #ffffff;
-            border: 0.1px solid gray;
-            color: #000000;
-            align-self: flex-end;
-            margin-left: auto !important;
-            margin-right: 0 !important;
-            text-align: right;
-            clear: both;
-        }
-
-
-        /* Typing indicator */
-        #typingIndicator {
-            font-style: italic;
-            font-size: 0.9rem;
-            color: #888;
-            /* padding: 6px 0; */
-        }
-
-        .welcome {
-            color: gray;
-            text-align: center;
-            font-size: 20px;
-            padding-top: 30%;
-        }
-
-        /* Responsive tweaks */
-        @media (max-width: 768px) {
-            #messages {
-                height: 55vh;
-                padding: 15px;
-                max-width: 100%;
-            }
-
-            .message {
-                max-width: 90%;
-                font-size: 0.95rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            #messages {
-                height: 50vh;
-                padding: 10px;
-                border-radius: 8px;
-            }
-
-            .message {
-                max-width: 100%;
-                font-size: 0.9rem;
-                padding: 8px 12px;
-            }
-        }
-
 
         /* Dark theme styles for message icon */
         body.dark-theme .message-icon svg {
             color: #9ca3af;
         }
 
-        .graph-container {
-            height: 400px;
-            margin: 10px 0;
-            background: #fafafa;
-            border-radius: 8px;
-            padding: 10px;
+        .graph-container {  
+            height: 400px;  
+            margin: 10px 0;  
+            background: #fafafa;  
+            border-radius: 8px;  
+            padding: 10px;  
             position: relative;
-        }
+        }  
 
         .graph-pin-controls {
             position: absolute;
@@ -619,7 +618,7 @@
             right: 10px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             border: 1px solid #e5e7eb;
             min-width: 180px;
             z-index: 20;
@@ -787,12 +786,12 @@
                 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
                 gap: 12px;
             }
-
+           
             .pinned-graph-item {
                 min-height: 280px;
                 padding: 12px;
             }
-
+           
             .pinned-graph-canvas-container {
                 min-height: 200px;
             }
@@ -856,7 +855,7 @@
         body.dark-theme .dashboard-dropdown {
             background: #2c2c2c;
             border-color: #444;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         body.dark-theme .dashboard-dropdown-title {
@@ -1033,7 +1032,7 @@
             color: #6b7280;
         }
 
-        /* Light theme styles for B button and new chat button */
+        /* Light theme styles for send button and new chat button */
         body:not(.dark-theme) #sendBtn {
             background: transparent;
             color: #000000;
@@ -1057,391 +1056,386 @@
             background-color: #333333;
         }
 
-        .input-area {
-            padding: 16px 0;
-            background: white;
-            border-top: 1px solid #e5e7eb;
-            border-radius: 0 0 12px 12px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-end;
-        }
+        .input-area {  
+            padding: 16px 0;  
+            background: white;  
+            border-top: 1px solid #e5e7eb;  
+            border-radius: 0 0 12px 12px;  
+            display: flex;  
+            gap: 12px;  
+            align-items: flex-end;  
+        }  
 
-        .input-container {
-            flex: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+        .input-container {  
+            flex: 1;  
+            position: relative;  
+            display: flex;  
+            align-items: center;  
+        }  
 
-        #messageInput {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #1e1e1e;
-            border-radius: 8px;
-            font-size: 14px;
-            resize: none;
-            outline: none;
-            font-family: inherit;
-            height: 44px;
-            /* Fixed height, no max-height */
-            overflow: hidden;
-            /* Remove scroll */
-            padding-left: 44px;
-            margin-left: 4px;
-            transition: padding-left 0.3s ease;
-        }
+        #messageInput {  
+            width: 100%;  
+            padding: 12px 16px;  
+            border: 1px solid #1e1e1e;  
+            border-radius: 8px;  
+            font-size: 14px;  
+            resize: none;  
+            outline: none;  
+            font-family: inherit;  
+            height: 44px; /* Fixed height, no max-height */
+            overflow: hidden; /* Remove scroll */
+            padding-left: 44px;  
+            margin-left: 4px;  
+            transition: padding-left 0.3s ease;  
+        }  
 
-        #messageInput:focus {
-            border-color: #000000;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
-        }
+        #messageInput:focus {  
+            border-color: #000000;  
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);  
+        }  
 
-        .button-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            height: 100%;
-        }
+        .button-group {  
+            display: flex;  
+            gap: 8px;  
+            align-items: center;  
+            height: 100%;  
+        }  
 
-        #sendBtn {
-            background: transparent;
-            color: #007bff;
-            border: none;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 500;
-            align-self: center;
-            margin: 0;
-            min-width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            box-shadow: none;
-        }
+        #sendBtn {  
+            background: transparent;  
+            color: #007bff;  
+            border: none;  
+            padding: 8px;  
+            border-radius: 50%;  
+            cursor: pointer;  
+            font-size: 18px;  
+            font-weight: 500;  
+            align-self: center;  
+            margin: 0;  
+            min-width: 36px;  
+            height: 36px;  
+            display: flex;  
+            align-items: center;  
+            justify-content: center;  
+            transition: all 0.2s ease;  
+            box-shadow: none;  
+        }  
 
-        #sendBtn:hover:not(:disabled) {
-            background: rgba(0, 123, 255, 0.1);
-            transform: scale(1.1);
-            color: #0056b3;
-        }
+        #sendBtn:hover:not(:disabled) {  
+            background: rgba(0, 123, 255, 0.1);  
+            transform: scale(1.1);  
+            color: #0056b3;  
+        }  
 
-        #sendBtn:active:not(:disabled) {
-            transform: scale(0.95);
-        }
+        #sendBtn:active:not(:disabled) {  
+            transform: scale(0.95);  
+        }  
 
-        #sendBtn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
-            color: #999;
-        }
+        #sendBtn:disabled {  
+            opacity: 0.3;  
+            cursor: not-allowed;  
+            transform: none;  
+            color: #999;  
+        }  
 
-        #sendBtn.only-arrow {
-            padding: 8px;
-            min-width: 36px;
-        }
+        #sendBtn.only-arrow {  
+            padding: 8px;  
+            min-width: 36px;  
+        }  
 
-        #sendBtn.only-arrow span.text {
-            display: none;
-        }
+        #sendBtn.only-arrow span.text {  
+            display: none;  
+        }  
 
-        .typing-indicator {
-            display: none;
-            padding: 12px 20px;
-            background: #f0f9ff;
-            border-radius: 12px;
-            margin: 8px 0;
-            align-self: flex-start;
-            border: 1px solid #bae6fd;
-        }
+        .typing-indicator {  
+            display: none;  
+            padding: 12px 20px;  
+            background: #f0f9ff;  
+            border-radius: 12px;  
+            margin: 8px 0;  
+            align-self: flex-start;  
+            border: 1px solid #bae6fd;  
+        }  
 
-        .thinking-text {
-            font-weight: 500;
-            color: #0369a1;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-style: italic;
-        }
+        .thinking-text {  
+            font-weight: 500;  
+            color: #0369a1;  
+            display: flex;  
+            align-items: center;  
+            gap: 8px;  
+            font-style: italic;  
+        }  
 
-        .thinking-text::before {
-            content: '';
-            width: 12px;
-            height: 12px;
-            border: 2px solid #4b5563;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s linear infinite;
-        }
+        .thinking-text::before {  
+            content: '';  
+            width: 12px;  
+            height: 12px;  
+            border: 2px solid #4b5563;  
+            border-radius: 50%;  
+            border-top-color: transparent;  
+            animation: spin 1s linear infinite;  
+        }  
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin {  
+            to { transform: rotate(360deg); }  
+        }  
 
-        .sidebar.minimized .sidebar-header h2 {
-            display: none;
-            font-size: 0;
-            line-height: 0;
-            overflow: hidden;
-        }
+        .sidebar.minimized .sidebar-header h2 {  
+            display: none;  
+            font-size: 0;  
+            line-height: 0;  
+            overflow: hidden;  
+        }  
 
-        .sidebar.minimized .sidebar-header {
-            justify-content: center;
-            padding-left: 0;
-            padding-right: 0;
-        }
+        .sidebar.minimized .sidebar-header {  
+            justify-content: center;  
+            padding-left: 0;  
+            padding-right: 0;  
+        }  
 
-        .inside-textarea-btn {
-            position: absolute;
-            left: 8px;
-            top: 8px;
-            height: 28px;
-            width: 28px;
-            background: transparent;
-            color: #c3a36d;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            border-radius: 0;
-            box-shadow: none;
-        }
+        .inside-textarea-btn {  
+            position: absolute;  
+            left: 8px;  
+            top: 8px;  
+            height: 28px;  
+            width: 28px;  
+            background: transparent;  
+            color: #c3a36d;  
+            border: none;  
+            font-size: 20px;  
+            cursor: pointer;  
+            z-index: 2;  
+            display: flex;  
+            align-items: center;  
+            justify-content: center;  
+            padding: 0;  
+            border-radius: 0;  
+            box-shadow: none;  
+        }  
 
-        .inside-textarea-btn:focus {
-            outline: none;
-        }
+        .inside-textarea-btn:focus {  
+            outline: none;  
+        }  
 
-        .tools-textarea-btn {
-            position: absolute;
-            left: 8px;
-            top: 8px;
-            height: 28px;
-            width: 28px;
-            background: transparent;
-            color: #c3a36d;
-            border: none;
-            cursor: pointer;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            border-radius: 0;
-            box-shadow: none;
-            font-size: 16px;
-        }
+        .tools-textarea-btn {  
+            position: absolute;  
+            left: 8px;  
+            top: 8px;  
+            height: 28px;  
+            width: 28px;  
+            background: transparent;  
+            color: #c3a36d;  
+            border: none;  
+            cursor: pointer;  
+            z-index: 2;  
+            display: flex;  
+            align-items: center;  
+            justify-content: center;  
+            padding: 0;  
+            border-radius: 0;  
+            box-shadow: none;  
+            font-size: 16px;  
+        }  
 
-        .tools-textarea-btn:focus {
-            outline: none;
-        }
+        .tools-textarea-btn:focus {  
+            outline: none;  
+        }  
 
-        .report-mode-tag {
-            position: absolute;
-            left: 40px;
-            top: 8px;
-            height: 28px;
-            background: #e8f4fd;
-            color: #0969da;
-            border: 1px solid #d1d9e0;
-            border-radius: 6px;
-            z-index: 2;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 4px 8px;
-            font-size: 12px;
-            font-weight: 500;
-            pointer-events: all;
-            white-space: nowrap;
-            cursor: default;
-        }
+        .report-mode-tag {  
+            position: absolute;  
+            left: 40px;  
+            top: 8px;  
+            height: 28px;  
+            background: #e8f4fd;  
+            color: #0969da;  
+            border: 1px solid #d1d9e0;  
+            border-radius: 6px;  
+            z-index: 2;  
+            display: none;  
+            align-items: center;  
+            justify-content: center;  
+            padding: 4px 8px;  
+            font-size: 12px;  
+            font-weight: 500;  
+            pointer-events: all;  
+            white-space: nowrap;  
+            cursor: default;  
+        }  
 
-        .report-mode-tag.active {
-            display: flex;
-        }
+        .report-mode-tag.active {  
+            display: flex;  
+        }  
 
-        .report-mode-tag .close-btn {
-            margin-left: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            color: #656d76;
-        }
+        .report-mode-tag .close-btn {  
+            margin-left: 6px;  
+            cursor: pointer;  
+            font-weight: bold;  
+            font-size: 14px;  
+            color: #656d76;  
+        }  
 
-        .report-mode-tag .close-btn:hover {
-            color: #ef4444;
-        }
+        .report-mode-tag .close-btn:hover {  
+            color: #ef4444;  
+        }  
 
-        .input-container.report-mode #messageInput {
-            padding-left: 150px;
-        }
+        .input-container.report-mode #messageInput {  
+            padding-left: 150px;  
+        }  
 
-        .input-container.report-mode .inside-textarea-btn,
-        .input-container.report-mode .tools-textarea-btn {
-            opacity: 0.7;
-        }
+        .input-container.report-mode .inside-textarea-btn,  
+        .input-container.report-mode .tools-textarea-btn {  
+            opacity: 0.7;  
+        }  
 
-        .tools-dropdown {
-            position: absolute;
-            left: 0px;
-            top: 40px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
-            z-index: 10;
-            min-width: 160px;
-            padding: 4px 0;
-            display: none;
-            flex-direction: column;
-            gap: 2px;
-        }
+        .tools-dropdown {  
+            position: absolute;  
+            left: 0px;  
+            top: 40px;  
+            background: #fff;  
+            border-radius: 8px;  
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);  
+            z-index: 10;  
+            min-width: 160px;  
+            padding: 4px 0;  
+            display: none;  
+            flex-direction: column;  
+            gap: 2px;  
+        }  
 
-        .tools-dropdown.show {
-            display: flex;
-        }
+        .tools-dropdown.show {  
+            display: flex;  
+        }  
 
-        .tools-menu-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: none;
-            border: none;
-            color: #b89b6a;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: background 0.2s;
-            text-align: left;
-            width: 100%;
-        }
+        .tools-menu-item {  
+            display: flex;  
+            align-items: center;  
+            gap: 8px;  
+            background: none;  
+            border: none;  
+            color: #b89b6a;  
+            font-size: 14px;  
+            font-weight: 500;  
+            padding: 8px 16px;  
+            cursor: pointer;  
+            border-radius: 6px;  
+            transition: background 0.2s;  
+            text-align: left;  
+            width: 100%;  
+        }  
 
-        .tools-menu-item:hover {
-            background: #f3f3f3;
-        }
+        .tools-menu-item:hover {  
+            background: #f3f3f3;  
+        }  
 
-        .tools-menu-icon {
-            display: flex;
-            align-items: center;
-            width: 16px;
-            height: 16px;
-        }
+        .tools-menu-icon {  
+            display: flex;  
+            align-items: center;  
+            width: 16px;  
+            height: 16px;  
+        }  
 
-        .tools-menu-text {
-            display: inline-block;
-        }
+        .tools-menu-text {  
+            display: inline-block;  
+        }  
 
-        .report-status {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #c3a36d;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            display: none;
-            font-weight: 500;
-        }
+        .report-status {  
+            position: fixed;  
+            top: 20px;  
+            right: 20px;  
+            background: #c3a36d;  
+            color: white;  
+            padding: 12px 20px;  
+            border-radius: 8px;  
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);  
+            z-index: 1000;  
+            display: none;  
+            font-weight: 500;  
+        }  
 
-        .report-status.show {
-            display: block;
-        }
+        .report-status.show {  
+            display: block;  
+        }  
 
-        .report-status.success {
-            background: #10b981;
-        }
+        .report-status.success {  
+            background: #10b981;  
+        }  
 
-        .report-status.error {
-            background: #ef4444;
-        }
+        .report-status.error {  
+            background: #ef4444;  
+        }  
 
-        .report-mode-indicator {
-            position: absolute;
-            left: 12px;
-            top: 12px;
-            display: none;
-            align-items: center;
-            gap: 6px;
-            background: #c3a36d;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-            z-index: 3;
-        }
+        .report-mode-indicator {  
+            position: absolute;  
+            left: 12px;  
+            top: 12px;  
+            display: none;  
+            align-items: center;  
+            gap: 6px;  
+            background: #c3a36d;  
+            color: white;  
+            padding: 4px 8px;  
+            border-radius: 4px;  
+            font-size: 12px;  
+            font-weight: 500;  
+            z-index: 3;  
+        }  
 
-        .report-mode-indicator.active {
-            display: none;
-            /* Hide this - we're using the inline tag instead */
-        }
+        .report-mode-indicator.active {  
+            display: none; /* Hide this - we're using the inline tag instead */  
+        }  
 
-        .input-container.report-mode #messageInput {
-            border-color: #c3a36d;
-            background: #fffbf5;
-        }
+        .input-container.report-mode #messageInput {  
+            border-color: #c3a36d;  
+            background: #fffbf5;  
+        }  
 
-        .input-container.report-mode #messageInput::placeholder {
-            color: #b89b6a;
-        }
+        .input-container.report-mode #messageInput::placeholder {  
+            color: #b89b6a;  
+        }  
 
-        #sendBtn.report-mode {
-            background: #c3a36d;
-            border: 2px solid #a88a5a;
-        }
+        #sendBtn.report-mode {  
+            background: #c3a36d;  
+            border: 2px solid #a88a5a;  
+        }  
 
-        #sendBtn.report-mode:hover:not(:disabled) {
-            background: #a88a5a;
-        }
+        #sendBtn.report-mode:hover:not(:disabled) {  
+            background: #a88a5a;  
+        }  
 
-        .cancel-report-btn {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            height: 24px;
-            width: 24px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 3;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
+        .cancel-report-btn {  
+            position: absolute;  
+            right: 8px;  
+            top: 8px;  
+            height: 24px;  
+            width: 24px;  
+            background: #ef4444;  
+            color: white;  
+            border: none;  
+            border-radius: 50%;  
+            cursor: pointer;  
+            z-index: 3;  
+            display: none;  
+            align-items: center;  
+            justify-content: center;  
+            font-size: 12px;  
+            font-weight: bold;  
+        }  
 
-        .cancel-report-btn.active {
-            display: flex;
-        }
+        .cancel-report-btn.active {  
+            display: flex;  
+        }  
 
-        .cancel-report-btn:hover {
-            background: #dc2626;
-        }
+        .cancel-report-btn:hover {  
+            background: #dc2626;  
+        }  
 
         /* Updated User Dropdown Styles */
-        .user-avatar-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
+        .user-avatar-container {  
+            position: relative;  
+            display: flex;  
+            align-items: center;  
+        }  
+         
         .user-avatar-button {
             display: flex;
             align-items: center;
@@ -1566,14 +1560,14 @@
         body.dark-theme .sidebar-header h2,
         body.dark-theme .toggle-btn,
         body.dark-theme .session-list li {
-            color: #FFFFFF;
+            color: #ffffff;
         }
 
         body.dark-theme .header {
             background: rgba(30, 30, 30, 0.95);
             border-bottom: 1px solid #333;
         }
-
+       
         body.dark-theme .header:hover {
             background: rgba(30, 30, 30, 0.98);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -1638,7 +1632,7 @@
             border-color: #8ab4f8;
             box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.3);
         }
-
+       
         body.dark-theme #messageInput::placeholder {
             color: #888;
         }
@@ -1664,40 +1658,31 @@
             background: #1e1e1e;
             border-bottom-color: #444;
         }
-
         body.dark-theme .user-dropdown-name {
             color: #e0e0e0;
         }
-
         body.dark-theme .user-dropdown-email {
             color: #aaa;
         }
-
         body.dark-theme .user-dropdown-item {
             color: #e0e0e0;
         }
-
         body.dark-theme .user-dropdown-item:hover {
             background: #3a3a3a;
         }
-
         body.dark-theme .user-dropdown-item.logout {
             color: #f47174;
         }
-
         body.dark-theme .user-dropdown-item.logout:hover {
             background: #5c2929;
         }
-
         body.dark-theme .tools-dropdown {
             background: #2c2c2c;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-
         body.dark-theme .tools-menu-item {
             color: #d4b581;
         }
-
         body.dark-theme .tools-menu-item:hover {
             background: #3a3a3a;
         }
@@ -1810,6 +1795,142 @@
 
         body.dark-theme .session-btn.new-chat:hover {
             background-color: #e0e0e0;
+        }
+
+        /* Sessions Section Styles */
+        .sessions-section {
+            margin: 4px 0 8px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .sessions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .sessions-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0;
+        }
+
+        .refresh-sessions-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            color: #6b7280;
+            transition: all 0.2s ease;
+        }
+
+        .refresh-sessions-btn:hover {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .sessions-list {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .sessions-loading {
+            padding: 8px 0;
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            color: #4b5563;
+        }
+
+        .session-item:hover {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .session-item.active {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .session-id {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .session-date {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-left: 8px;
+        }
+
+        .sessions-empty {
+            padding: 8px 0;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        /* Dark theme sessions styles */
+        body.dark-theme .sessions-section {
+            border-bottom-color: #333;
+        }
+
+        body.dark-theme .sessions-title {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .refresh-sessions-btn {
+            color: #9ca3af;
+        }
+
+        body.dark-theme .refresh-sessions-btn:hover {
+            background-color: #374151;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .session-item {
+            color: #d1d5db;
+            background-color: #000000;
+        }
+
+        body.dark-theme .session-item:hover {
+            background: #374151; /* slightly lighter dark gray on hover */
+        }
+
+        body.dark-theme .session-item.active {
+            background-color: #0e1015;
+            color: #e5e6e8;
+        }
+
+        body.dark-theme .session-date {
+            color: #6b7280;
+        }
+
+        body.dark-theme .sessions-loading,
+        body.dark-theme .sessions-empty {
+            color: #9ca3af;
         }
 
         /* Dashboard Section Styles */
@@ -2167,134 +2288,129 @@
             color: #1677ff;
         }
 
-        /* Comprehensive Responsive Design */
 
+        /* Comprehensive Responsive Design */
+       
         /* Large screens (1200px and up) */
         @media (min-width: 1200px) {
             .chat-container {
-                max-width: 1400px;
+                max-width: 1600px; /* Increased from 1400px */
                 margin: 0 auto;
             }
-
+           
             .header h1 {
                 font-size: 32px;
             }
-
+           
             .pinned-graphs-grid {
                 grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
                 gap: 24px;
             }
         }
-
+       
         /* Medium screens (768px to 1199px) */
         @media (max-width: 1199px) and (min-width: 769px) {
             .sidebar {
                 width: 240px;
             }
-
+           
             .main-wrapper {
                 margin-left: 240px;
             }
-
+           
             .main-wrapper.minimized-sidebar {
                 margin-left: 50px;
             }
-
+           
             .chat-container {
                 padding: 16px 20px;
                 max-width: 1000px;
-                margin-top: 90px;
-                /* Adjusted for medium screens */
-                padding-bottom: 20px;
-                /* Reduced bottom padding */
-                justify-content: flex-start;
-                /* Start from top with gap */
+                margin-top: 90px; /* Adjusted for medium screens */
+                padding-bottom: 20px; /* Reduced bottom padding */
+                justify-content: flex-start; /* Start from top with gap */
             }
-
+           
             .header h1 {
                 font-size: 26px;
             }
-
+           
             .pinned-graphs-grid {
                 grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
                 gap: 20px;
             }
         }
-
+       
         /* Small screens (481px to 768px) */
         @media (max-width: 768px) and (min-width: 482px) {
             .sidebar {
                 width: 200px;
             }
-
+           
             .sidebar.minimized {
                 width: 50px;
             }
-
+           
             .main-wrapper {
                 margin-left: 200px;
             }
-
+           
             .main-wrapper.minimized-sidebar {
                 margin-left: 50px;
             }
-
+           
             .chat-container {
                 padding: 12px 16px;
-                margin-top: 80px;
-                /* Adjusted for small screens */
-                padding-bottom: 20px;
-                /* Reduced bottom padding */
-                justify-content: flex-start;
-                /* Start from top with gap */
+                margin-top: 80px; /* Adjusted for small screens */
+                padding-bottom: 20px; /* Reduced bottom padding */
+                justify-content: flex-start; /* Start from top with gap */
             }
-
+           
             .header {
                 padding: 16px 20px;
                 min-height: 70px;
             }
-
+           
             .header h1 {
                 font-size: 24px;
             }
-
+           
             .header p {
                 font-size: 14px;
             }
-
+           
             .header-controls {
                 gap: 12px;
             }
-
+           
             .pinned-graphs-grid {
                 grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
                 gap: 16px;
             }
-
+           
             .pinned-graph-item {
                 min-height: 280px;
                 padding: 12px;
             }
-
+           
             .pinned-graph-canvas-container {
                 min-height: 200px;
             }
-
+           
             .message {
                 max-width: 90%;
                 font-size: 13px;
             }
-
+           
             .input-area {
                 padding: 12px 0;
             }
-
+           
             #messageInput {
                 font-size: 13px;
                 padding: 10px 14px;
             }
         }
-
+       
         /* Extra small screens (320px to 480px) - Mobile phones */
         @media (max-width: 481px) {
             .sidebar {
@@ -2304,25 +2420,25 @@
                 transition: transform 0.3s ease;
                 z-index: 2000;
             }
-
+           
             .sidebar.show {
                 transform: translateX(0);
             }
-
+           
             .sidebar.minimized {
                 width: 100%;
                 transform: translateX(-100%);
             }
-
+           
             .main-wrapper {
                 margin-left: 0;
                 width: 100%;
             }
-
+           
             .main-wrapper.minimized-sidebar {
                 margin-left: 0;
             }
-
+           
             .header {
                 left: 0 !important;
                 padding: 12px 16px;
@@ -2331,287 +2447,281 @@
                 gap: 8px;
                 align-items: flex-start;
             }
-
+           
             .chat-container {
                 padding: 8px 12px;
                 max-width: 100%;
-                margin-top: 80px;
-                /* Moved mobile chat container further down */
-                padding-bottom: 20px;
-                /* Reduced bottom padding for mobile */
-                justify-content: flex-end;
-                /* Push chat-content to bottom on mobile */
+                margin-top: 80px; /* Moved mobile chat container further down */
+                padding-bottom: 20px; /* Reduced bottom padding for mobile */
+                justify-content: flex-end; /* Push chat-content to bottom on mobile */
             }
-
+           
             .header-left {
                 width: 100%;
             }
-
+           
             .header h1 {
                 font-size: 20px;
                 margin-bottom: 2px;
             }
-
+           
             .header p {
                 font-size: 12px;
                 opacity: 0.8;
             }
-
+           
             .header-controls {
                 width: 100%;
                 justify-content: space-between;
                 gap: 8px;
             }
-
+           
             .chat-content {
                 padding: 0 16px;
                 max-height: calc(100vh - 120px);
                 height: auto;
-                margin-top: auto;
-                /* Push to bottom */
+                margin-top: auto; /* Push to bottom */
             }
-
+           
             .messages {
                 padding: 12px 0;
                 gap: 12px;
             }
-
+           
             .message {
                 max-width: 95%;
                 padding: 10px 12px;
                 font-size: 12px;
             }
-
+           
             .input-area {
                 padding: 10px 0;
             }
-
+           
             .input-container {
                 gap: 8px;
             }
-
+           
             #messageInput {
                 font-size: 12px;
                 padding: 8px 12px;
                 height: 40px;
             }
-
+           
             #sendBtn {
                 min-width: 32px;
                 height: 32px;
                 font-size: 16px;
             }
-
+           
             .pinned-graphs-grid {
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
-
+           
             .pinned-graph-item {
                 min-height: 250px;
                 padding: 10px;
             }
-
+           
             .pinned-graph-canvas-container {
                 min-height: 180px;
             }
-
+           
             .pinned-graph-title {
                 font-size: 14px;
             }
-
+           
             .pinned-graph-meta {
                 font-size: 10px;
             }
-
+           
             /* Mobile-specific adjustments */
             .tools-textarea-btn {
                 font-size: 14px;
                 width: 24px;
                 height: 24px;
             }
-
+           
             .report-mode-tag {
                 font-size: 10px;
                 padding: 3px 6px;
             }
-
+           
             .dashboard-header-container {
                 padding: 16px;
                 flex-direction: column;
                 gap: 12px;
                 align-items: flex-start;
             }
-
+           
             .dashboard-header-title {
                 font-size: 22px;
             }
-
+           
             .dashboard-controls {
                 width: 100%;
                 justify-content: space-between;
             }
-
+           
             /* Enhanced mobile toggle button */
             .toggle-btn {
                 width: 40px;
                 height: 40px;
                 border-radius: 8px;
             }
-
+           
             .toggle-btn svg {
                 width: 22px;
                 height: 22px;
             }
         }
-
+       
         /* Very small screens (below 320px) - Small mobile devices */
         @media (max-width: 319px) {
             .chat-container {
                 padding: 4px 8px;
             }
-
+           
             .header {
                 padding: 8px 12px;
                 min-height: 50px;
             }
-
+           
             .header h1 {
                 font-size: 18px;
             }
-
+           
             .header p {
                 font-size: 11px;
             }
-
+           
             .chat-content {
                 padding: 0 12px;
             }
-
+           
             .message {
                 max-width: 98%;
                 padding: 8px 10px;
                 font-size: 11px;
             }
-
+           
             #messageInput {
                 font-size: 11px;
                 padding: 6px 10px;
                 height: 36px;
             }
-
+           
             #sendBtn {
                 min-width: 28px;
                 height: 28px;
                 font-size: 14px;
             }
-
+           
             .pinned-graph-item {
                 min-height: 200px;
                 padding: 8px;
             }
-
+           
             .pinned-graph-canvas-container {
                 min-height: 150px;
             }
         }
-
+       
         /* Chatbot widget mode (when embedded in small containers) */
         @media (max-height: 600px) {
             .header {
                 min-height: 50px;
                 padding: 8px 16px;
             }
-
+           
             .header h1 {
                 font-size: 18px;
                 margin-bottom: 2px;
             }
-
+           
             .header p {
                 font-size: 11px;
             }
-
+           
             .chat-content {
                 min-height: calc(100vh - 80px);
             }
-
+           
             .messages {
                 padding: 8px 0;
                 gap: 8px;
             }
-
+           
             .message {
                 padding: 8px 12px;
                 font-size: 12px;
             }
-
+           
             .input-area {
                 padding: 8px 0;
             }
-
+           
             #messageInput {
                 height: 36px;
                 font-size: 12px;
             }
-
+           
             #sendBtn {
                 min-width: 32px;
                 height: 32px;
             }
         }
-
+       
         /* Ultra-wide screens */
         @media (min-width: 1600px) {
             .chat-container {
-                max-width: 1600px;
+                max-width: 1800px; /* Increased from 1600px */
             }
-
+           
             .pinned-graphs-grid {
                 grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
                 gap: 28px;
             }
         }
-
+       
         /* Landscape orientation on mobile */
         @media (max-width: 768px) and (orientation: landscape) {
             .header {
                 min-height: 50px;
                 padding: 8px 16px;
             }
-
+           
             .header h1 {
                 font-size: 18px;
             }
-
+           
             .chat-content {
                 min-height: calc(100vh - 70px);
             }
-
+           
             .messages {
                 padding: 6px 0;
             }
-
+           
             .input-area {
                 padding: 6px 0;
             }
         }
-
+       
         /* High DPI displays */
-        @media (-webkit-min-device-pixel-ratio: 2),
-        (min-resolution: 192dpi) {
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
             .message {
                 border-width: 0.5px;
             }
-
+           
             .input-area {
                 border-top-width: 0.5px;
             }
         }
-
+       
         /* Print styles */
         @media print {
-
             .sidebar,
             .header-controls,
             .input-area,
@@ -2619,24 +2729,23 @@
             .report-status {
                 display: none !important;
             }
-
+           
             .main-wrapper {
                 margin-left: 0 !important;
             }
-
+           
             .chat-container {
                 padding: 0 !important;
             }
-
+           
             .chat-content {
                 border: none !important;
                 box-shadow: none !important;
             }
         }
-
+       
         /* Mobile-specific enhancements */
         @media (max-width: 481px) {
-
             /* Improve touch targets */
             .session-btn,
             .dashboard-item,
@@ -2644,12 +2753,12 @@
                 min-height: 44px;
                 padding: 12px 16px;
             }
-
+           
             /* Better spacing for mobile */
             .sidebar-content {
                 padding: 12px 16px;
             }
-
+           
             /* Improve dropdown positioning on mobile */
             .tools-dropdown,
             .user-dropdown,
@@ -2663,7 +2772,7 @@
                 max-height: 80vh;
                 overflow-y: auto;
             }
-
+           
             /* Mobile-friendly graph controls */
             .graph-pin-controls {
                 position: relative;
@@ -2672,274 +2781,269 @@
                 margin-bottom: 8px;
                 justify-content: center;
             }
-
+           
             .pin-btn {
                 min-height: 36px;
                 padding: 8px 12px;
                 font-size: 14px;
             }
-
+           
             /* Mobile-friendly dashboard controls */
             .dashboard-controls {
                 flex-wrap: wrap;
                 gap: 8px;
             }
-
+           
             .refresh-dashboard-btn,
             .dashboard-settings-btn {
                 min-width: 36px;
                 min-height: 36px;
             }
-
+           
             /* Mobile-friendly theme toggle */
             .theme-toggle-btn {
                 min-width: 36px;
                 min-height: 36px;
             }
-
+           
             /* Mobile-friendly model dropdown */
             .model-dropdown-btn {
                 min-height: 36px;
                 padding: 8px 12px;
             }
-
+           
             /* Mobile-friendly user avatar */
             .user-avatar-button {
                 min-width: 36px;
                 min-height: 36px;
             }
         }
-
+       
         /* Small height screens (like embedded widgets) */
         @media (max-height: 500px) {
             .header {
                 min-height: 40px;
                 padding: 6px 12px;
             }
-
+           
             .header h1 {
                 font-size: 16px;
                 margin-bottom: 0;
             }
-
+           
             .header p {
                 display: none;
             }
-
+           
             .chat-content {
                 min-height: calc(100vh - 60px);
             }
-
+           
             .messages {
                 padding: 6px 0;
                 gap: 6px;
             }
-
+           
             .message {
-                flex: 1;
-                padding: 10px 0;
-                gap: 16px;
-                min-height: 400px;
-                overflow-y: auto;
+                padding: 6px 10px;
+                font-size: 11px;
             }
-
+           
             .input-area {
                 padding: 6px 0;
             }
-
+           
             #messageInput {
                 height: 32px;
                 font-size: 11px;
                 padding: 6px 10px;
             }
-
+           
             #sendBtn {
                 min-width: 28px;
                 height: 28px;
                 font-size: 12px;
             }
-
+           
             .tools-textarea-btn {
                 width: 20px;
                 height: 20px;
                 font-size: 12px;
             }
         }
-
+       
         /* Ultra-compact mode for very small containers */
         @media (max-width: 320px) and (max-height: 400px) {
             .header {
                 min-height: 30px;
                 padding: 4px 8px;
             }
-
+           
             .header h1 {
                 font-size: 14px;
             }
-
+           
             .chat-content {
                 min-height: calc(100vh - 40px);
             }
-
+           
             .messages {
                 padding: 4px 0;
                 gap: 4px;
             }
-
+           
             .message {
                 padding: 4px 8px;
                 font-size: 10px;
             }
-
+           
             .input-area {
                 padding: 4px 0;
             }
-
+           
             #messageInput {
                 height: 28px;
                 font-size: 10px;
                 padding: 4px 8px;
             }
-
+           
             #sendBtn {
                 min-width: 24px;
                 height: 24px;
                 font-size: 10px;
             }
         }
-
+       
         /* Embedded mode styles */
         body.embedded-mode {
             overflow: hidden;
         }
-
+       
         body.embedded-mode .sidebar {
             display: none !important;
         }
-
+       
         body.embedded-mode .main-wrapper {
             margin-left: 0 !important;
             width: 100% !important;
         }
-
+       
         body.embedded-mode .chat-container {
+            height: 100vh;
             max-height: 100vh;
             overflow: hidden;
         }
-
+       
         body.embedded-mode .chat-content {
             height: 100%;
             display: flex;
             flex-direction: column;
         }
-
+       
         body.embedded-mode .messages {
             flex: 1;
             overflow-y: auto;
             max-height: calc(100vh - 120px);
         }
-
+       
         body.embedded-mode .input-area {
             flex-shrink: 0;
         }
-
+       
         /* Mobile viewport optimizations */
         body.mobile-viewport {
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
         }
-
+       
         body.mobile-viewport .chat-container {
             padding: 4px 8px;
         }
-
+       
         body.mobile-viewport .header {
             position: sticky;
             top: 0;
             z-index: 100;
             background: inherit;
         }
-
+       
         /* Small height viewport optimizations */
         body.small-height-viewport .chat-container {
             height: 100vh;
             overflow: hidden;
         }
-
+       
         body.small-height-viewport .messages {
             max-height: 60vh;
             overflow-y: auto;
         }
-
+       
         /* Responsive body classes for JavaScript targeting */
         body.mobile-view .sidebar {
             transform: translateX(-100%);
         }
-
+       
         body.mobile-view .sidebar.show {
             transform: translateX(0);
         }
-
+       
         body.small-height .header {
             min-height: 40px;
         }
-
+       
         body.small-height .chat-content {
             min-height: calc(100vh - 60px);
-        }
+        }  
 
-        .settings-dropdown-btn,
-        .settings-dropdown-parent {
-            font-size: 20px;
-            font-weight: 600;
-            color: #b89b6a;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .settings-dropdown-btn, .settings-dropdown-parent {  
+            font-size: 20px;  
+            font-weight: 600;  
+            color: #b89b6a;  
+            display: flex;  
+            align-items: center;  
+            gap: 12px;  
+        }  
 
-        .settings-dropdown-btn .chart-icon,
-        .settings-dropdown-parent .chart-icon {
-            font-size: 24px;
-        }
+        .settings-dropdown-btn .chart-icon, .settings-dropdown-parent .chart-icon {  
+            font-size: 24px;  
+        }  
 
-        .settings-dropdown-btn {
-            background: none;
-            border: none;
-            width: 100%;
-            padding: 16px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-align: left;
-        }
+        .settings-dropdown-btn {  
+            background: none;  
+            border: none;  
+            width: 100%;  
+            padding: 16px 24px;  
+            border-radius: 8px;  
+            cursor: pointer;  
+            transition: background 0.2s;  
+            text-align: left;  
+        }  
 
-        .settings-dropdown-btn:hover {
-            background: #f3f3f3;
-        }
+        .settings-dropdown-btn:hover {  
+            background: #f3f3f3;  
+        }  
 
-        .settings-dropdown-parent {
-            background: none;
-            border: none;
-            width: 100%;
-            padding: 16px 24px 8px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+        .settings-dropdown-parent {  
+            background: none;  
+            border: none;  
+            width: 100%;  
+            padding: 16px 24px 8px 24px;  
+            border-radius: 8px;  
+            cursor: pointer;  
+            transition: background 0.2s;  
+        }  
 
-        .settings-dropdown-parent:hover,
-        .settings-dropdown-parent.active {
-            background: #f3f3f3;
-        }
+        .settings-dropdown-parent:hover, .settings-dropdown-parent.active {  
+            background: #f3f3f3;  
+        }  
 
-        .settings-submenu {
-            box-shadow: none;
-            background: none;
-            padding: 0;
-            border-radius: 0;
-            position: static;
-        }
+        .settings-submenu {  
+            box-shadow: none;  
+            background: none;  
+            padding: 0;  
+            border-radius: 0;  
+            position: static;  
+        }  
 
         .model-dropdown-container {
             position: absolute;
@@ -2961,7 +3065,6 @@
                 margin: 0 16px;
             }
         }
-
         .model-dropdown-btn {
             background: transparent;
             border: none;
@@ -2977,15 +3080,12 @@
             transition: all 0.2s;
             line-height: 1;
         }
-
         .model-dropdown-btn:hover {
             background: transparent;
         }
-
         .model-dropdown-btn.active {
             background: transparent;
         }
-
         .model-dropdown {
             position: absolute;
             top: 110%;
@@ -2993,36 +3093,31 @@
             min-width: 220px;
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             border: 1px solid #e5e7eb;
             z-index: 2000;
             padding: 8px 0;
             display: none;
         }
-
         .model-dropdown.show {
             display: block;
         }
-
         .model-dropdown-title {
             font-size: 14px;
             font-weight: 700;
             padding: 8px 16px 0 16px;
             color: #1f2937;
         }
-
         .model-dropdown-desc {
             font-size: 12px;
             color: #6b7280;
             padding: 0 16px 8px 16px;
         }
-
         .model-dropdown-list {
             border-top: 1px solid #e5e7eb;
             margin-top: 4px;
             padding-top: 4px;
         }
-
         .model-dropdown-item {
             display: flex;
             align-items: center;
@@ -3037,20 +3132,16 @@
             border-radius: 6px;
             transition: background 0.2s;
         }
-
         .model-dropdown-item.selected {
             background: #f3f4f6;
             font-weight: 600;
         }
-
         .model-dropdown-item:hover {
             background: #e5e7eb;
         }
-
         .model-dropdown-icon {
             font-size: 18px;
         }
-
         .model-dropdown-dot {
             width: 8px;
             height: 8px;
@@ -3059,36 +3150,30 @@
             margin-right: 8px;
             display: inline-block;
         }
-
         .model-dropdown-pinned {
             font-size: 12px;
             color: #6b7280;
             padding: 4px 16px 0 16px;
             font-weight: 600;
         }
-
         body.dark-theme .model-dropdown {
             background: #23272f;
             border-color: #444;
         }
-
+       
         body.dark-theme .model-dropdown-btn {
             background: transparent;
             color: #e0e0e0;
         }
-
         body.dark-theme .model-dropdown-item {
             color: #e0e0e0;
         }
-
         body.dark-theme .model-dropdown-item.selected {
             background: #343541;
         }
-
         body.dark-theme .model-dropdown-btn:hover {
             background: transparent;
         }
-
         body.dark-theme .model-dropdown-btn.active {
             background: transparent;
         }
@@ -3096,12 +3181,9 @@
         body.dark-theme .model-dropdown-item:hover {
             background: #23272f;
         }
-
-        body.dark-theme .model-dropdown-title,
-        body.dark-theme .model-dropdown-pinned {
+        body.dark-theme .model-dropdown-title, body.dark-theme .model-dropdown-pinned {
             color: #fff;
         }
-
         body.dark-theme .model-dropdown-desc {
             color: #aaa;
         }
@@ -3243,13 +3325,8 @@
         }
 
         @keyframes refresh-spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .unpin-btn {
@@ -3511,7 +3588,7 @@
             transform: translateY(-2px);
         }
 
-
+   
 
         .dark-theme .dashboard-wrapper-box {
             background: #0b1829;
@@ -3562,105 +3639,73 @@
             color: #e0e0e0;
         }
 
-        tn
-    </style>
+    </style>  
 
-</head>
+</head>  
 
-<body>
+<body>  
 
-    <div class="report-status" id="reportStatus">
-        <span id="reportStatusText">Generating report...</span>
-    </div>
+    <div class="report-status" id="reportStatus">  
+        <span id="reportStatusText">Generating report...</span>  
+    </div>  
 
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2>Home</h2>
+    <div class="sidebar" id="sidebar">  
+        <div class="sidebar-header">  
+            <h2>Home</h2>  
             <button class="toggle-btn" id="toggleSidebar" title="Toggle Sidebar">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path d="M15 18l-6-6 6-6" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
                 </svg>
-            </button>
-        </div>
-        <div class="sidebar-content">
-            <button class="session-btn new-chat" id="newChatBtn">New Chat</button>
-
-            <!-- Dashboard Section -->
-            <!-- <div class="dashboard-section">
-                <div class="dashboard-header">
-                    <h3 class="dashboard-title">Dashboards</h3>
-                    <span class="dashboard-chevron">‹</span>
-                </div>
-                <div class="dashboard-items">
-                    <button class="dashboard-item" id="cfoDashboardBtn">
-                        <span class="dashboard-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard">
-                                <rect width="7" height="9" x="3" y="3" rx="1"/>
-                                <rect width="7" height="5" x="14" y="3" rx="1"/>
-                                <rect width="7" height="9" x="14" y="12" rx="1"/>
-                                <rect width="7" height="5" x="3" y="16" rx="1"/>
-                            </svg>
-                        </span>
-                        <span class="dashboard-text">CFO Dashboard</span>
-                    </button>
-                    <button class="dashboard-item" id="cisoDashboardBtn">
-                        <span class="dashboard-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75px" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check-icon lucide-shield-check">
-                                <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
-                                <path d="m9 12 2 2 4-4"/>
-                            </svg>
-                        </span>
-                        <span class="dashboard-text">CISO Dashboard</span>
+            </button>  
+        </div>  
+        <div class="sidebar-content">  
+            <button class="session-btn new-chat" id="newChatBtn">New Chat</button>  
+           
+            <!-- Recent Sessions Section -->
+            <div class="sessions-section">
+                <div class="sessions-header">
+                    <h3 class="sessions-title">Recent Sessions</h3>
+                    <button class="refresh-sessions-btn" id="refreshSessionsBtn" title="Refresh Sessions" onclick="loadSessionsDirectly()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                            <path d="M21 3v5h-5"/>
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                            <path d="M3 21v-5h5"/>
+                        </svg>
                     </button>
                 </div>
-            </div> -->
-
-            <!-- Session History Section -->
-            <div class="session-history-section">
-                <div class="session-history-header">
-                    <h3 class="session-history-title">Recent Sessions</h3>
-                    <div class="session-history-controls">
-                        <button class="refresh-sessions-btn" onclick="window.dataChatbot.refreshSessionList()"
-                            title="Refresh Sessions">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                                <path d="M21 3v5h-5" />
-                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                                <path d="M3 21v-5h5" />
-                            </svg>
-                        </button>
-                        <span class="session-history-chevron">‹</span>
+                <div class="sessions-list" id="sessionsList">
+                    <div class="sessions-loading" id="sessionsLoading">
+                        <span>Loading sessions...</span>
                     </div>
                 </div>
-                <div class="session-history-items">
-                    <ul class="session-list" id="sessionList">
-                        <!-- Sessions will be loaded here -->
-                    </ul>
-                </div>
+            </div>
+           
+           
+           
             </div>
 
-        </div>
-    </div>
 
-    <div class="main-wrapper" id="mainWrapper">
-        <div class="header">
-            <div class="header-left">
-                <div>
-                    <div class="logo-group">
-                        <div class="logo-image-box"></div>
-                        <h1>Smart Assistant</h1>
-                    </div>
-                    <p>Ask questions about your data and get instant insights</p>
-                </div>
-            </div>
-            <div class="header-controls">
+        </div>  
+    </div>  
+
+    <div class="main-wrapper" id="mainWrapper">  
+        <div class="header">  
+            <div class="header-left">  
+                <div>  
+                    <div class="logo-group">  
+                        <div class="logo-image-box"></div>  
+                        <h1>Smart Assistant</h1>  
+                    </div>  
+                    <p>Ask questions about your data and get instant insights</p>  
+                </div>  
+            </div>  
+            <div class="header-controls">  
                 <div class="model-dropdown-container">
                     <button class="model-dropdown-btn" id="modelDropdownBtn">
                         <span id="selectedModelLabel">Best model</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" style="margin-left: 4px;">
-                            <path d="M6 9l6 6 6-6" />
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 4px;">
+                            <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
                     <div class="model-dropdown" id="modelDropdown">
@@ -3670,51 +3715,42 @@
                         <div class="model-dropdown-list">
                             <button class="model-dropdown-item" data-model="gpt4o">
                                 <span class="model-dropdown-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-sparkles-icon lucide-sparkles">
-                                        <path
-                                            d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
-                                        <path d="M20 2v4" />
-                                        <path d="M22 4h-4" />
-                                        <circle cx="4" cy="20" r="2" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles-icon lucide-sparkles">
+                                        <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>
+                                        <path d="M20 2v4"/>
+                                        <path d="M22 4h-4"/>
+                                        <circle cx="4" cy="20" r="2"/>
                                     </svg>
                                 </span> GPT-4o
                             </button>
                             <button class="model-dropdown-item" data-model="claude">
                                 <span class="model-dropdown-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="lucide lucide-brain-circuit-icon lucide-brain-circuit">
-                                        <path
-                                            d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
-                                        <path d="M9 13a4.5 4.5 0 0 0 3-4" />
-                                        <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" />
-                                        <path d="M3.477 10.896a4 4 0 0 1 .585-.396" />
-                                        <path d="M6 18a4 4 0 0 1-1.967-.516" />
-                                        <path d="M12 13h4" />
-                                        <path d="M12 18h6a2 2 0 0 1 2 2v1" />
-                                        <path d="M12 8h8" />
-                                        <path d="M16 8V5a2 2 0 0 1 2-2" />
-                                        <circle cx="16" cy="13" r=".5" />
-                                        <circle cx="18" cy="3" r=".5" />
-                                        <circle cx="20" cy="21" r=".5" />
-                                        <circle cx="20" cy="8" r=".5" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain-circuit-icon lucide-brain-circuit">
+                                        <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
+                                        <path d="M9 13a4.5 4.5 0 0 0 3-4"/>
+                                        <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/>
+                                        <path d="M3.477 10.896a4 4 0 0 1 .585-.396"/>
+                                        <path d="M6 18a4 4 0 0 1-1.967-.516"/>
+                                        <path d="M12 13h4"/>
+                                        <path d="M12 18h6a2 2 0 0 1 2 2v1"/>
+                                        <path d="M12 8h8"/>
+                                        <path d="M16 8V5a2 2 0 0 1 2-2"/>
+                                        <circle cx="16" cy="13" r=".5"/>
+                                        <circle cx="18" cy="3" r=".5"/>
+                                        <circle cx="20" cy="21" r=".5"/>
+                                        <circle cx="20" cy="8" r=".5"/>
                                     </svg>
                                 </span> Claude 3.5 Sonnet
                             </button>
                             <button class="model-dropdown-item" data-model="gemini">
                                 <span class="model-dropdown-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-bot-icon lucide-bot">
-                                        <path d="M12 8V4H8" />
-                                        <rect width="16" height="12" x="4" y="8" rx="2" />
-                                        <path d="M2 14h2" />
-                                        <path d="M20 14h2" />
-                                        <path d="M15 13v2" />
-                                        <path d="M9 13v2" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot-icon lucide-bot">
+                                        <path d="M12 8V4H8"/>
+                                        <rect width="16" height="12" x="4" y="8" rx="2"/>
+                                        <path d="M2 14h2"/>
+                                        <path d="M20 14h2"/>
+                                        <path d="M15 13v2"/>
+                                        <path d="M9 13v2"/>
                                     </svg>
                                 </span> Gemini 1.5 Pro
                             </button>
@@ -3722,26 +3758,21 @@
                     </div>
                 </div>
 
-                <div class="theme-toggle-container">
-                    <button class="theme-toggle-btn" onclick="window.dataChatbot.toggleThemeDropdown()"
-                        title="Toggle Theme">
+               <div class="theme-toggle-container">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Theme">
                         <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="5" />
-                            <path
-                                d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
                         </svg>
                     </button>
-                    <div class="theme-dropdown" id="themeDropdown">
-                        <div class="theme-option" onclick="window.dataChatbot.setTheme('light')">
-                            <span>Light</span>
-                        </div>
-                        <div class="theme-option" onclick="window.dataChatbot.setTheme('dark')">
-                            <span>Dark</span>
-                        </div>
+                    <div class="theme-dropdown" id="themeDropdown" style="display:none;">
+                        <div class="theme-option" data-theme="light">Light</div>
+                        <div class="theme-option" data-theme="dark">Dark</div>
                     </div>
                 </div>
 
-                <div class="user-avatar-container">
+                
+                <div class="user-avatar-container">  
                     <button class="user-avatar-button" id="userAvatarButton">
                         U
                     </button>
@@ -3756,48 +3787,46 @@
                             <button class="user-dropdown-item logout" id="logoutBtn">Sign Out</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </div>  
+            </div>  
+        </div>  
 
-        <div class="chat-container">
-            <div class="chat-content">
-                <div class="welcome">
-                    <span> Welcome, How Can I Help You Today?</span>
-                </div>
-                <div class="messages" id="messages"></div>
-                <div class="typing-indicator" id="typingIndicator">
-                    <span class="thinking-text">Thinking...</span>
-                </div>
-                <div class="input-area">
-                    <div class="input-container" id="inputContainer">
-                        <textarea id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
-                        <button id="toolsBtn" class="tools-textarea-btn" title="Choose a tool">+</button>
-                        <div id="reportModeTag" class="report-mode-tag">
-                            📊 Report <span class="close-btn" id="closeReportMode">×</span>
-                        </div>
+        <div class="chat-container">  
+            <div class="chat-content">  
+                <div class="messages" id="messages"></div>  
+                <div class="typing-indicator" id="typingIndicator">  
+                    <span class="thinking-text">Thinking...</span>  
+                </div>  
+                <div class="input-area">  
+                    <div class="input-container" id="inputContainer">  
+                        <textarea  
+                            id="messageInput"  
+                            placeholder="Type your message here..."  
+                            rows="1"  
+                        ></textarea>  
+                        <button id="toolsBtn" class="tools-textarea-btn" title="Choose a tool">+</button>  
+                        <div id="reportModeTag" class="report-mode-tag">  
+                            📊 Report <span class="close-btn" id="closeReportMode">×</span>  
+                        </div>  
 
-                        <div class="report-mode-indicator" id="reportModeIndicator">
-                            📊 <span>Report</span>
-                        </div>
+                        <div class="report-mode-indicator" id="reportModeIndicator">  
+                            📊 <span>Report</span>  
+                        </div>  
 
-                        <button id="cancelReportBtn" class="cancel-report-btn" title="Exit report mode">×</button>
+                        <button id="cancelReportBtn" class="cancel-report-btn" title="Exit report mode">×</button>  
 
-                        <div id="toolsDropdown" class="tools-dropdown">
-                            <button class="tools-menu-item" id="generateReportMenuItem">
+                        <div id="toolsDropdown" class="tools-dropdown">  
+                            <button class="tools-menu-item" id="generateReportMenuItem">  
                                 <div class="tools-menu-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="lucide lucide-file-chart-column-icon lucide-file-chart-column">
-                                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                                        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-                                        <path d="M8 18v-1" />
-                                        <path d="M12 18v-6" />
-                                        <path d="M16 18v-3" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-chart-column-icon lucide-file-chart-column">
+                                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+                                        <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                                        <path d="M8 18v-1"/>
+                                        <path d="M12 18v-6"/>
+                                        <path d="M16 18v-3"/>
                                     </svg>
-                                </div>
-                                <span class="tools-menu-text">Generate Report</span>
+                                </div>  
+                                <span class="tools-menu-text">Generate Report</span>  
                             </button>
                             <button class="tools-menu-item" id="checkSessionBtn">
                                 <span class="tools-menu-icon">🔍</span> Check Latest Session
@@ -3813,20 +3842,21 @@
                             </button>
                             <button class="tools-menu-item" id="summarizeOutlookBtn">
                                 <span class="tools-menu-icon">📧</span> Summarize Outlook Emails
-                            </button>
-                        </div>
-                    </div>
-                    <div class="button-group">
-                        <button id="sendBtn">➤</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
+                            </button>  
+                        </div>  
+                    </div>  
+                    <div class="button-group">  
+                        <button id="sendBtn">➤</button>  
+                    </div>  
+                </div>  
+            </div>  
+        </div>  
+    </div>  
+</body>
+</html>
+<script>
         // Chat application JavaScript
-        class ChatApp {
+       class ChatApp {
             constructor() {
                 this.messages = [];
                 this.isLoading = false;
@@ -3842,7 +3872,6 @@
                 // Event listeners
                 this.sendBtn.addEventListener('click', () => {
                     this.handleSend();
-                    // Hide welcome messages
                     document.querySelectorAll('.welcome').forEach(el => {
                         el.style.display = 'none';
                     });
@@ -3852,86 +3881,265 @@
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         this.handleSend();
-                        // Hide welcome messages
                         document.querySelectorAll('.welcome').forEach(el => {
                             el.style.display = 'none';
                         });
                     }
                 });
 
-                // … rest of your existing init() code …
+                this.messageInput.addEventListener('input', () => this.autoResizeTextarea());
+                this.typingIndicator.style.display = 'none';
+
+                // Load theme preference
+                ThemeManager.initTheme();
+
+                // Initialize UI
+                this.initializeUI();
+
+                // Latest agent button
+                const searchLatestAgentBtn = document.getElementById('searchLatestAgentBtn');
+                if (searchLatestAgentBtn) {
+                    searchLatestAgentBtn.addEventListener('click', () => {
+                        searchLatestAgent(this);
+                    });
+                }
+
+                // Start new chat on load
+                this.startNewChat();
             }
 
-
             initializeUI() {
-                // Sidebar toggle - fix the selector to match the actual button ID
+                // Sidebar toggle
                 const sidebarToggle = document.getElementById('toggleSidebar');
                 const sidebar = document.getElementById('sidebar');
                 const mainWrapper = document.getElementById('mainWrapper');
 
                 if (sidebarToggle) {
                     sidebarToggle.addEventListener('click', () => {
-                        // Check if we're on mobile/small screen
                         const isMobile = window.innerWidth <= 481;
-
                         if (isMobile) {
-                            // On mobile, toggle the 'show' class for overlay behavior
                             sidebar.classList.toggle('show');
-                            // Add/remove overlay
                             this.toggleMobileOverlay();
                         } else {
-                            // On desktop, use minimized behavior
                             sidebar.classList.toggle('minimized');
                             mainWrapper.classList.toggle('minimized-sidebar');
                         }
                     });
                 }
 
-                // Handle window resize to adjust sidebar behavior
+                // Handle resize
                 window.addEventListener('resize', () => {
                     const isMobile = window.innerWidth <= 481;
-                    const sidebar = document.getElementById('sidebar');
-                    const mainWrapper = document.getElementById('mainWrapper');
-
                     if (isMobile) {
-                        // Reset desktop classes on mobile
                         sidebar.classList.remove('minimized');
                         mainWrapper.classList.remove('minimized-sidebar');
-                        // Hide sidebar by default on mobile
                         if (!sidebar.classList.contains('show')) {
                             sidebar.style.transform = 'translateX(-100%)';
                         }
                     } else {
-                        // Reset mobile classes on desktop
                         sidebar.classList.remove('show');
                         sidebar.style.transform = '';
                         this.removeMobileOverlay();
                     }
                 });
 
+                // Theme button + dropdown
+                const themeBtn = document.getElementById('themeToggleBtn');
+                const themeDropdown = document.getElementById('themeDropdown');
+
+                if (themeBtn && themeDropdown) {
+                    themeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        ThemeManager.toggleThemeDropdown();
+                    });
+
+                    themeDropdown.querySelectorAll('.theme-option').forEach(option => {
+                        option.addEventListener('click', () => {
+                            const theme = option.getAttribute('data-theme');
+                            ThemeManager.setTheme(theme);
+                        });
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!themeDropdown.contains(e.target) && !themeBtn.contains(e.target)) {
+                            themeDropdown.style.display = 'none';
+                        }
+                    });
+                }
+
+                // TODO: Model dropdown, user dropdown, sessions UI etc.
+
+
                 // Theme toggle functionality
                 window.dataChatbot = {
-                    toggleThemeDropdown: () => {
-                        const dropdown = document.getElementById('themeDropdown');
-                        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-                    },
-                    setTheme: (theme) => {
-                        if (theme === 'dark') {
-                            document.body.classList.add('dark-theme');
-                            localStorage.setItem('theme', 'dark');
-                        } else {
-                            document.body.classList.remove('dark-theme');
-                            localStorage.setItem('theme', 'light');
+                    refreshSessionList: async () => {
+                        try {
+                            console.log('🔄 Loading sessions...');
+                            const response = await fetch('/api/sessions');
+                            const data = await response.json();
+                           
+                            if (data.sessions && data.sessions.length > 0) {
+                                console.log('✅ Loaded', data.sessions.length, 'sessions from KQL');
+                                this.displaySessions(data.sessions);
+                            } else {
+                                console.log('⚠️ No sessions found');
+                                this.displaySessions([]);
+                            }
+                        } catch (error) {
+                            console.error('❌ Error loading sessions:', error);
                         }
-                        document.getElementById('themeDropdown').style.display = 'none';
+                    },
+                    displaySessionList: (sessions) => {
+                        const sessionList = document.getElementById('sessionList');
+                        if (!sessionList) return;
+
+                        console.log(`🎯 Displaying ${sessions.length} sessions in sidebar`);
+
+                        if (sessions.length === 0) {
+                            sessionList.innerHTML = '<li style="color: #6b7280; font-style: italic; padding: 12px;">No sessions found in ChatHistory_CFO table</li>';
+                            console.log('📭 No sessions found - check KQL database connection');
+                            return;
+                        }
+
+                        sessionList.innerHTML = sessions.map(session => {
+                            const timeAgo = this.formatTime(session.timestamp);
+                            return `
+                                <li class="session-item" data-session-id="${session.session_id}" title="${this.escapeHtml(session.question)}">
+                                    <div class="session-title">${this.escapeHtml(session.title)}</div>
+                                    <div class="session-time">${timeAgo}</div>
+                                </li>
+                            `;
+                        }).join('');
+
+                        // Add click handlers for session items
+                        sessionList.querySelectorAll('.session-item').forEach(item => {
+                            item.addEventListener('click', () => {
+                                const sessionId = item.getAttribute('data-session-id');
+                                this.loadSession(sessionId);
+                            });
+                        });
+                    },
+                    displaySessions: (sessions) => {
+                        console.log('🎯 Displaying', sessions ? sessions.length : 0, 'sessions');
+                       
+                        const sessionsList = document.getElementById('sessionsList');
+                        const sessionsLoading = document.getElementById('sessionsLoading');
+                       
+                        if (!sessionsList) {
+                            console.error('❌ Sessions list element not found!');
+                            return;
+                        }
+
+                        // Hide loading
+                        if (sessionsLoading) {
+                            sessionsLoading.style.display = 'none';
+                        }
+
+                        // Display sessions
+                        if (sessions.length === 0) {
+                            sessionsList.innerHTML = '<div class="sessions-empty">No sessions found</div>';
+                            console.log('No sessions to display');
+                            return;
+                        }
+
+                        console.log('Displaying sessions:', sessions.length);
+                        sessionsList.innerHTML = sessions.map(session => `
+                            <div class="session-item" data-session-id="${session.id}">
+                                <div class="session-title">${session.title}</div>
+                                <div class="session-time">${session.timestamp ? this.formatTimeAgo(session.timestamp) : 'Recent'}</div>
+                            </div>
+                        `).join('');
+
+                        console.log('Sessions HTML created, adding click handlers...');
+
+                        // Add click handlers
+                        sessionsList.querySelectorAll('.session-item').forEach(item => {
+                            item.addEventListener('click', () => {
+                                const sessionId = item.getAttribute('data-session-id');
+                               
+                                // Remove active from all
+                                sessionsList.querySelectorAll('.session-item').forEach(i => i.classList.remove('active'));
+                                // Add active to clicked
+                                item.classList.add('active');
+                               
+                                // Load session details
+                                this.loadSessionDetails(sessionId);
+                            });
+                        });
+                       
+                        console.log('Sessions display complete');
+                    },
+                    formatTimeAgo: (timestamp) => {
+                        if (!timestamp) return 'Unknown time';
+                       
+                        const now = new Date();
+                        const sessionTime = new Date(timestamp);
+                        const diffMs = now - sessionTime;
+                        const diffMins = Math.floor(diffMs / 60000);
+                        const diffHours = Math.floor(diffMs / 3600000);
+                        const diffDays = Math.floor(diffMs / 86400000);
+                       
+                        if (diffMins < 1) return 'Just now';
+                        if (diffMins < 60) return `${diffMins}m ago`;
+                        if (diffHours < 24) return `${diffHours}h ago`;
+                        if (diffDays < 7) return `${diffDays}d ago`;
+                       
+                        return sessionTime.toLocaleDateString();
+                    },
+                    loadSessionDetails: async (sessionId) => {
+                        try {
+                            const response = await fetch(`/api/sessions/${sessionId}`);
+                            const sessionData = await response.json();
+                           
+                            // Clear current chat
+                            this.messages = [];
+                            this.messagesContainer.innerHTML = '';
+                           
+                            // Add session details to chat
+                            this.addMessage('user', sessionData.question || 'Session question');
+                            this.addMessage('assistant', sessionData.response || 'Session response');
+                           
+                            console.log(`Loaded session: ${sessionId}`);
+                        } catch (error) {
+                            console.error('Error loading session:', error);
+                        }
+                    },
+                    loadSession: async (sessionId) => {
+                        try {
+                            // Clear current messages
+                            this.messages = [];
+                            this.messagesContainer.innerHTML = '';
+
+                            // Add loading message
+                            this.addMessage('assistant', 'Loading session...');
+
+                            // Fetch session data
+                            const response = await fetch(`/api/sessions/${sessionId}`);
+                            const data = await response.json();
+
+                            if (data.status === 'success') {
+                                // Clear loading message
+                                this.messagesContainer.innerHTML = '';
+
+                                // Add session messages
+                                this.addMessage('user', data.question);
+                                this.addMessage('assistant', data.response.content || 'No response available');
+                            } else {
+                                this.addMessage('assistant', `Error loading session: ${data.error}`);
+                            }
+                        } catch (error) {
+                            console.error('Error loading session:', error);
+                            this.addMessage('assistant', `Error loading session: ${error.message}`);
+                        }
                     }
                 };
 
+        
                 // Model dropdown functionality
                 const modelDropdownBtn = document.getElementById('modelDropdownBtn');
                 const modelDropdown = document.getElementById('modelDropdown');
                 const selectedModelLabel = document.getElementById('selectedModelLabel');
-
+               
                 if (modelDropdownBtn && modelDropdown) {
                     // Toggle dropdown
                     modelDropdownBtn.addEventListener('click', (e) => {
@@ -3945,21 +4153,21 @@
                     modelItems.forEach(item => {
                         item.addEventListener('click', (e) => {
                             e.stopPropagation();
-
+                           
                             // Remove selected class from all items
                             modelItems.forEach(i => i.classList.remove('selected'));
-
+                           
                             // Add selected class to clicked item
                             item.classList.add('selected');
-
+                           
                             // Update selected model label
                             const modelName = item.textContent.trim();
                             selectedModelLabel.textContent = modelName;
-
+                           
                             // Close dropdown
                             modelDropdown.classList.remove('show');
                             modelDropdownBtn.classList.remove('active');
-
+                           
                             // Store selected model (you can use this in chat functionality)
                             this.selectedModel = item.getAttribute('data-model');
                         });
@@ -3977,6 +4185,52 @@
                     }
                 });
 
+                // User dropdown functionality
+            const userAvatarButton = document.getElementById('userAvatarButton');
+            const userDropdown = document.getElementById('userDropdown');
+
+            if (userAvatarButton && userDropdown) {
+                // Toggle dropdown
+                userAvatarButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('show');
+                    userAvatarButton.classList.toggle('active');
+                });
+
+                // Handle dropdown items (if you want click actions)
+                const userItems = userDropdown.querySelectorAll('.user-dropdown-item');
+                userItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+
+                        // Remove selected class from all items (if applicable)
+                        userItems.forEach(i => i.classList.remove('selected'));
+
+                        // Add selected class to clicked item
+                        item.classList.add('selected');
+
+                        // Close dropdown
+                        userDropdown.classList.remove('show');
+                        userAvatarButton.classList.remove('active');
+
+                        // Example: handle different actions
+                        if (item.id === 'profileBtn') {
+                            console.log("Profile Settings clicked");
+                        } else if (item.id === 'logoutBtn') {
+                            console.log("Logging out...");
+                        }
+                    });
+                });
+
+                // Close dropdown on outside click
+                document.addEventListener('click', (e) => {
+                    if (!userDropdown.contains(e.target) && !userAvatarButton.contains(e.target)) {
+                        userDropdown.classList.remove('show');
+                        userAvatarButton.classList.remove('active');
+                    }
+                });
+            }
+
                 // New chat button
                 const newChatBtn = document.querySelector('.session-btn.new-chat');
                 if (newChatBtn) {
@@ -3987,6 +4241,12 @@
             async handleSend() {
                 const message = this.messageInput.value.trim();
                 if (!message || this.isLoading) return;
+
+                // Clear welcome message if it exists (check for centered welcome content)
+                const welcomeContent = this.messagesContainer.querySelector('div[style*="display: flex"]');
+                if (welcomeContent) {
+                    this.messagesContainer.innerHTML = '';
+                }
 
                 // Add user message to UI
                 this.addMessage('user', message);
@@ -4010,7 +4270,7 @@
                     }
 
                     const data = await response.json();
-
+                   
                     if (data.error) {
                         throw new Error(data.error);
                     }
@@ -4018,7 +4278,7 @@
                     // Add assistant response
                     const assistantContent = data.assistant_message ? data.assistant_message.content : data.response;
                     this.addMessage('assistant', assistantContent);
-
+                   
                     // Display agent name if available
                     if (data.agent_name) {
                         this.displayAgentName(data.agent_name);
@@ -4035,9 +4295,9 @@
             addMessage(role, content) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${role}`;
-
+               
                 const now = new Date();
-
+               
                 messageDiv.innerHTML = `
                     <div class="message-content">
                         <div class="message-text">${this.formatMessage(content)}</div>
@@ -4101,7 +4361,7 @@
                     document.body.appendChild(agentNameElement);
                 }
                 agentNameElement.textContent = `Agent: ${agentName}`;
-
+               
                 // Auto-hide after 5 seconds
                 setTimeout(() => {
                     if (agentNameElement) {
@@ -4117,21 +4377,32 @@
 
             async startNewChat() {
                 try {
-                    const response = await fetch('/api/reset', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    });
-
-                    if (response.ok) {
-                        // Clear messages
-                        this.messages = [];
-                        this.messagesContainer.innerHTML = '';
-
-                        // Add welcome message
-                        this.addMessage('assistant', 'Hello! I\'m your AI assistant. I can help you analyze data, create visualizations, and answer questions about your database. What would you like to know?');
+                    // Clear all messages and reset chat state
+                    this.messages = [];
+                    this.messagesContainer.innerHTML = '';
+                   
+                    // Clear any selected session highlighting
+                    const selectedSessions = document.querySelectorAll('.session-item.active');
+                    selectedSessions.forEach(session => session.classList.remove('active'));
+                   
+                    // Reset message input
+                    if (this.messageInput) {
+                        this.messageInput.value = '';
+                        this.messageInput.placeholder = "Type your message here...";
+                        this.messageInput.focus();
                     }
+                   
+                    // Show centered welcome message (no box)
+                    this.messagesContainer.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; min-height: calc(100vh - 200px);">
+                            <div style="text-align: center; padding: 40px;">
+                                <p style="margin: 0 0 20px 0; color: #666; font-size: 16px; line-height: 1.5;">Hello! I'm your Smart Assistant. How can I help you today?</p>
+                               
+                            </div>
+                        </div>
+                    `;
+                   
+                    console.log('New chat started - cleared all previous content');
                 } catch (error) {
                     console.error('Error starting new chat:', error);
                 }
@@ -4224,7 +4495,7 @@
             toggleMobileOverlay() {
                 let overlay = document.getElementById('mobileOverlay');
                 const sidebar = document.getElementById('sidebar');
-
+               
                 if (sidebar.classList.contains('show')) {
                     // Create overlay if it doesn't exist
                     if (!overlay) {
@@ -4244,7 +4515,7 @@
                             backdrop-filter: blur(2px);
                         `;
                         document.body.appendChild(overlay);
-
+                       
                         // Close sidebar when clicking overlay
                         overlay.addEventListener('click', () => {
                             sidebar.classList.remove('show');
@@ -4263,25 +4534,96 @@
                 }
             }
 
+
+            // ========== Theme Manager ==========
+
+
+            formatTime(timestamp) {
+                if (!timestamp) return 'Unknown';
+               
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffDays = Math.floor(diffMs / 86400000);
+
+                if (diffMins < 1) return 'Just now';
+                if (diffMins < 60) return `${diffMins}m ago`;
+                if (diffHours < 24) return `${diffHours}h ago`;
+                if (diffDays < 7) return `${diffDays}d ago`;
+               
+                return date.toLocaleDateString();
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            showError(title, message = null) {
+                // Handle both single message and title/message format
+                const errorMessage = message ? `${title}\n${message}` : title;
+                console.error(errorMessage);
+               
+                // Show alert to user
+                alert(errorMessage);
+            }
+
+
         }
 
-        // Initialize the chat app when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            const chatApp = new ChatApp();
+                    const ThemeManager = {
+                toggleThemeDropdown: function () {
+                    const dropdown = document.getElementById('themeDropdown');
+                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                },
 
-            // Check agent status and display agent name
-            checkAgentStatus(chatApp);
+                setTheme: function (theme) {
+                    if (theme === 'dark') {
+                        document.body.classList.add('dark-theme');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.body.classList.remove('dark-theme');
+                        localStorage.setItem('theme', 'light');
+                    }
+                    document.getElementById('themeDropdown').style.display = 'none';
+                },
 
-            // Add initial welcome message with enhanced capabilities
-            // chatApp.addMessage('assistant', 'How Can I help you Today?');
-        });
+                initTheme: function () {
+                    if (localStorage.getItem('theme') === 'dark') {
+                        document.body.classList.add('dark-theme');
+                    } else {
+                        document.body.classList.remove('dark-theme');
+                    }
+                }
+            };
+
+            // ========== Init ==========
+            document.addEventListener('DOMContentLoaded', () => {
+                const chatApp = new ChatApp();
+                window.dataChatbot = chatApp;
+
+                console.log('ChatApp initialized:', window.dataChatbot);
+
+                checkAgentStatus(chatApp);
+                loadSessionsDirectly();
+
+                const refreshSessionsBtn = document.getElementById('refreshSessionsBtn');
+                if (refreshSessionsBtn) {
+                    refreshSessionsBtn.addEventListener('click', () => {
+                        loadSessionsDirectly();
+                    });
+                }
+            });
 
         // Function to check agent status and display agent name
         async function checkAgentStatus(chatApp) {
             try {
                 const response = await fetch('/api/agent/status');
                 const data = await response.json();
-
+               
                 if (data.agent_created && data.agent_name) {
                     chatApp.displayAgentName(data.agent_name);
                 }
@@ -4290,12 +4632,113 @@
             }
         }
 
+
+        // Direct function to load sessions
+        async function loadSessionsDirectly() {
+            console.log('🚀 DIRECT: Loading sessions directly...');
+           
+            try {
+                const response = await fetch('/api/sessions');
+                const data = await response.json();
+               
+                console.log('🚀 DIRECT: Got', data.sessions.length, 'sessions');
+               
+                const sessionsList = document.getElementById('sessionsList');
+                const sessionsLoading = document.getElementById('sessionsLoading');
+               
+                if (sessionsList && sessionsLoading) {
+                    sessionsLoading.style.display = 'none';
+                   
+                    if (data.sessions && data.sessions.length > 0) {
+                        sessionsList.innerHTML = data.sessions.map(session => `
+                            <div class="session-item" data-session-id="${session.id} onclick="loadSessionDetails('${session.id}')" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f5f5f5'">
+                                <div style="font-weight: medium;">${session.title}</div>
+                                
+                            </div>
+                        `).join('');
+                       
+                        console.log('🚀 DIRECT: Sessions displayed successfully!');
+                    } else {
+                        sessionsList.innerHTML = '<div style="padding: 8px; color: #666;">No sessions found</div>';
+                    }
+                } else {
+                    console.error('🚀 DIRECT: DOM elements not found');
+                }
+            } catch (error) {
+                console.error('🚀 DIRECT: Error:', error);
+            }
+        }
+
+        // Function to load session details and display in chat container
+        async function loadSessionDetails(sessionId) {
+            try {
+                const messagesContainer = document.getElementById('messages');
+               
+                if (!messagesContainer) {
+                    return;
+                }
+               
+                messagesContainer.innerHTML = '<div style="padding: 20px; text-align: center; min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center;">Loading session details...</div>';
+               
+                const response = await fetch(`/api/sessions/${sessionId}`);
+                const data = await response.json();
+               
+                if (data.error) {
+                    messagesContainer.innerHTML = `<div style="padding: 20px; color: red;">Error: ${data.error}</div>`;
+                    return;
+                }
+               
+                // Process the response data
+                let responseText = data.response || 'No response';
+               
+                // If response is base64 encoded, decode it
+                if (data.response && data.response.length > 100) {
+                    try {
+                        const decoded = atob(data.response);
+                        const jsonData = JSON.parse(decoded);
+                        responseText = `Query: ${jsonData.query || 'N/A'}\n\nResult: ${JSON.stringify(jsonData.preview || [], null, 2)}`;
+                    } catch (e) {
+                        responseText = data.response;
+                    }
+                }
+               
+                // Clear the container first
+                messagesContainer.innerHTML = '';
+               
+                // Use the same addMessage function for consistency
+                if (window.dataChatbot && window.dataChatbot.addMessage) {
+                    window.dataChatbot.addMessage('user', data.question || 'No question');
+                    window.dataChatbot.addMessage('assistant', responseText);
+                } else {
+                    // Fallback if addMessage is not available
+                    messagesContainer.innerHTML = `
+                        <div class="message user">
+                            <div class="message-content">
+                                <div class="message-text">${data.question || 'No question'}</div>
+                            </div>
+                        </div>
+                        <div class="message assistant">
+                            <div class="message-content" style="padding:0px 2px;">
+                                <div class="message-text">${responseText}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+               
+            } catch (error) {
+                const messagesContainer = document.getElementById('messages');
+                if (messagesContainer) {
+                    messagesContainer.innerHTML = `<div style="padding: 20px; color: red;">Error: ${error.message}</div>`;
+                }
+            }
+        }
+
         // Function to search for latest agent with timestamp
         async function searchLatestAgent(chatApp) {
             try {
                 const response = await fetch('/api/agent/latest');
                 const data = await response.json();
-
+               
                 if (response.ok) {
                     chatApp.displayAgentName(data.agent_name);
                     chatApp.addMessage('assistant', `✅ Found latest main agent: **${data.agent_name}**\n\n📊 **Agent Details:**\n- ID: \`${data.agent_id}\`\n- Total Main Agents: ${data.total_main_agents}\n- Total Agents: ${data.total_agents}\n- Found at: ${new Date(data.timestamp).toLocaleString()}`);
@@ -4307,4 +4750,5 @@
                 chatApp.addMessage('assistant', `❌ **Error:** Failed to search for latest agent: ${error.message}`);
             }
         }
-    </script>
+            
+    </script>>
